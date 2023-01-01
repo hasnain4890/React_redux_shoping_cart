@@ -1,26 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { add } from "../store/cartSlice";
 import { fetchProducts } from "../store/productSlice";
+import { STATUSES } from "../store/productSlice";
 
 function Products() {
   const dispatch = useDispatch();
-  const [products1, setProducts] = useState([]);
+
+  // Alias as product1
+  const { data: products1, status } = useSelector((state) => state.product);
+  //   const [products1, setProducts] = useState([]);
   useEffect(() => {
-    const fetchProducts = async () => {
-      const res = await fetch("https://dummyjson.com/products");
-      const data = await res.json();
-      console.log(data);
-      setProducts(data.products);
-    };
-    fetchProducts();
+    dispatch(fetchProducts());
+    // const fetchProducts = async () => {
+    //   const res = await fetch("https://dummyjson.com/products");
+    //   const data = await res.json();
+    //   console.log(data);
+    //   setProducts(data.products);
+    // };
+    // fetchProducts();
   }, []);
   const handleadd = (product) => {
     // to add product in react store
     dispatch(add(product));
   };
 
-  console.log(products1);
+  if (status === STATUSES.LOADING) {
+    return (
+      <h1
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          textAlign: "center",
+        }}
+      >
+        LOADING...
+      </h1>
+    );
+  }
+
+  if (status === STATUSES.ERROR) {
+    return <h1>Something went Wrong!</h1>;
+  }
   return (
     <div className="productsWrapper">
       {products1.length > 0 &&

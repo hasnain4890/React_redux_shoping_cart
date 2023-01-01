@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const STATUSES = object.freeze({
+export const STATUSES = {
   IDLE: "idle",
   ERROR: "error",
   LOADING: "loading",
-});
+};
 
 const productSlice = createSlice({
   name: "product",
@@ -44,7 +44,8 @@ export function fetchProducts() {
     try {
       const res = await fetch("https://dummyjson.com/products");
       const data = await res.json();
-      dispatch(setProducts(data));
+      console.log(data);
+      dispatch(setProducts(data.products));
       dispatch(setStatus(STATUSES.IDLE));
     } catch (err) {
       console.log(err);
