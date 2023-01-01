@@ -25,6 +25,9 @@ const productSlice = createSlice({
 
       state.data = action.payload;
     },
+    setStatus(state, action) {
+      state.status = action.payload;
+    },
   },
 });
 
@@ -42,6 +45,10 @@ export function fetchProducts() {
       const res = await fetch("https://dummyjson.com/products");
       const data = await res.json();
       dispatch(setProducts(data));
-    } catch (err) {}
+      dispatch(setStatus(STATUSES.IDLE));
+    } catch (err) {
+      console.log(err);
+      dispatch(setStatus(STATUSES.ERROR));
+    }
   };
 }
